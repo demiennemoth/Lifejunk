@@ -73,7 +73,7 @@
   <h2 class="text-sm uppercase tracking-wide text-zinc-400 mb-2">Профиль</h2>
   <div class="flex flex-col sm:flex-row bg-zinc-900 rounded-2xl overflow-hidden shadow-lg ring-1 ring-zinc-800">
     <div class="sm:w-1/3">
-      <img src="moth_realistic.png" alt="Моль-подопечный" class="object-cover w-full h-full grayscale opacity-80" />
+      <img src="images/moth_realistic.png" alt="Моль-подопечный" class="object-cover w-full h-full grayscale opacity-80" />
     </div>
     <div class="sm:w-2/3 p-4 space-y-2 text-sm">
       <h3 class="text-lg font-semibold text-zinc-100">L. Atramentaria</h3>
@@ -114,13 +114,13 @@
       money: 200,
       stats: { health: 70, energy: 60, mood: 55, hunger: 40, hygiene: 65, social: 45 },
       activity: null,
-      buffs: { satietyUntil: 0, restedUntil: 0 },
       speed: 1,
       paused: false,
+      buffs: { satietyUntil: 0, restedUntil: 0 },
     };
 
     const actions = [
-      { key: 'sleep', name: 'Поспать (4ч)', dur: 4, apply(){d('Сон. Ты и одеяло подписали перемирие.'); mod({energy:+40, health:+5, hunger:+5});}},
+      { key: 'sleep', name: 'Поспать (4ч)', dur: 4, apply(){d('Сон. Ты и одеяло подписали перемирие. Бодрость на 8 часов.'); S.buffs.restedUntil = Math.max(S.buffs.restedUntil, worldHours()+8); mod({energy:+40, health:+5, hunger:+5});}},
       { key: 'ramen', name: 'Рамэн (0.5ч)', dur: 0.5, apply(){money(-5); mod({hunger:-30, mood:+3}); S.buffs.satietyUntil = Math.max(S.buffs.satietyUntil, worldHours()+6); d('Рамэн. Солёная химия, но душа теплее. Сытость на 6 часов.');}},
       { key: 'shower', name: 'Душ (0.5ч)', dur: 0.5, apply(){mod({hygiene:+35, energy:+5}); d('Душ. Мир стал на 10% терпимее.');}},
       { key: 'walk', name: 'Гулять в наушниках (1ч)', dur: 1, apply(){mod({mood:+12, social:+2, energy:-6}); d('Прогулка. Дома не стало меньше, но воздуха больше.');}},
@@ -229,6 +229,7 @@
     
 // ---------- Time helpers ----------
 function worldHours(){ return S.day*24 + S.hour; }
+
 // ---------- Activities ----------
     function startActivity(a){
       if(S.activity){ d('Занят. Сначала закончи текущее.'); return; }
@@ -245,14 +246,11 @@ function worldHours(){ return S.day*24 + S.hour; }
       
 // пассивный дрейн с учётом баффов (сытость/отдохнувший)
 const wh = worldHours();
-const hungerRate = (wh < S.buffs.satietyUntil) ? 0.05 : 0.15;   // голод медленнее при сытости
-const energyRate = (wh < S.buffs.restedUntil) ? 0.05 : 0.20;    // энергия утекает медленно, пока "отдохнувший"
+const hungerRate = (wh < S.buffs.satietyUntil) ? 0.05 : 0.15;   // голод растёт медленнее при сытости
+const energyRate = (wh < S.buffs.restedUntil) ? 0.05 : 0.20;    // энергия утекает медленнее, пока "отдохнувший"
 const moodRate   = 0.02;
-
 mod({ energy: -energyRate*dt, hunger: +hungerRate*dt, mood: -moodRate*dt });
-
-
-      // активность
+// активность
       if(S.activity){
         S.activity.left -= dt;
         if(S.activity.left<=0){
@@ -270,7 +268,7 @@ mod({ energy: -energyRate*dt, hunger: +hungerRate*dt, mood: -moodRate*dt });
 const TIME_SCALE = 2; // игровых часа за реальный час (день = 12 реальных часов)
 let lastTs = performance.now();
 setInterval(() => {
-  if(S.paused||S.gameover||S.victory) { lastTs = performance.now(); return; }
+  if(S.paused) { lastTs = performance.now(); return; }
   const now = performance.now();
   const realHours = (now - lastTs) / 3600000; // часы реального времени
   lastTs = now;
