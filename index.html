@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ru" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LifeSim — минимальный макет</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .bar{height:8px;border-radius:9999px;}
+    .bar-inner{height:8px;border-radius:9999px;transition:width .25s linear;}
+    .log{font-variant-ligatures: none;}
+  </style>
+</head>
+<body class="h-full bg-zinc-950 text-zinc-100">
+  <div class="max-w-5xl mx-auto p-4 md:p-6 space-y-4">
+    <header class="flex items-center justify-between">
+      <h1 class="text-xl md:text-2xl font-bold">LifeSim <span class="text-zinc-400 text-base">v0.1 mock</span></h1>
+      <div class="flex items-center gap-2 text-sm">
+        <button id="btn-new" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700">Новая жизнь</button>
+        <button id="btn-save" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700">Сохранить</button>
+        <button id="btn-load" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700">Загрузить</button>
+      </div>
+    </header>
+
+    <section class="grid md:grid-cols-3 gap-4">
+      <!-- HUD -->
+      <div class="md:col-span-2 space-y-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div class="px-3 py-2 bg-zinc-900 rounded-2xl">
+            <div class="text-xs text-zinc-400">День / время</div>
+            <div class="text-lg font-semibold"><span id="day">1</span>, <span id="clock">08:00</span></div>
+          </div>
+          <div class="px-3 py-2 bg-zinc-900 rounded-2xl">
+            <div class="text-xs text-zinc-400">Деньги</div>
+            <div class="text-lg font-semibold"><span id="money">200</span> ₽</div>
+          </div>
+          <div class="px-3 py-2 bg-zinc-900 rounded-2xl">
+            <div class="text-xs text-zinc-400">Скорость</div>
+            <div class="flex gap-2 mt-1">
+              <button data-speed="1" class="speed px-2 py-1 rounded-lg bg-zinc-800">1×</button>
+              <button data-speed="2" class="speed px-2 py-1 rounded-lg bg-zinc-800">2×</button>
+              <button data-speed="4" class="speed px-2 py-1 rounded-lg bg-zinc-800">4×</button>
+              <button id="btn-pause" class="px-2 py-1 rounded-lg bg-zinc-800">⏸</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div class="bg-zinc-900 rounded-2xl p-3 space-y-2">
+            <Stat label="Энергия" key="energy" />
+            <Stat label="Здоровье" key="health" />
+            <Stat label="Настроение" key="mood" />
+          </div>
+          <div class="bg-zinc-900 rounded-2xl p-3 space-y-2">
+            <Stat label="Голод" key="hunger" invert />
+            <Stat label="Гигиена" key="hygiene" />
+            <Stat label="Социальность" key="social" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="space-y-3">
+        <h2 class="text-sm uppercase tracking-wide text-zinc-400">Действия</h2>
+        <div id="actions" class="grid gap-2">
+          <!-- buttons will be injected -->
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-sm uppercase tracking-wide text-zinc-400 mb-2">Лог</h2>
+      <div id="log" class="log bg-zinc-900 rounded-2xl p-3 h-56 overflow-auto text-sm space-y-1"></div>
+    </section>
+  </div>
+
+  <template id="stat-row">
+    <div>
+      <div class="flex items-center justify-between text-xs text-zinc-400 mb-1">
+        <span class="label"></span>
+        <span class="value text-zinc-200 font-medium"></span>
+      </div>
+      <div class="bar bg-zinc-800 w-full"><div class="bar-inner bg-zinc-600 w-1/2"></div></div>
+    </div>
+  </template>
+
+  <script>
+    // ---------- State ----------
+    const S = {
+      day: 1,
+      hour: 8,
+      money: 200,
+      stats: { health: 70, energy: 60, mood: 55, hunger: 40, hygiene: 65, social: 45 },
+      activity: null,
+      speed: 1,
+      paused: false,
+    };
+
+    const actions = [
+      { key: 'sleep', name: 'Поспать (4ч)', dur: 4, apply(){d('Сон. Ты и одеяло подписали перемирие.'); mod({energy:+40, health:+5, hunger:+5});}},
+      { key: 'ramen', name: 'Рамэн (0.5ч)', dur: 0.5, apply(){money(-5); mod({hunger:-30, mood:+3}); d('Рамэн. Солёная химия, но душа теплее.');}},
+      { key: 'shower', name: 'Душ (0.5ч)', dur: 0.5, apply(){mod({hygiene:+35, energy:+5}); d('Душ. Мир стал на 10% терпимее.');}},
+      { key: 'walk', name: 'Гулять в наушниках (1ч)', dur: 1, apply(){mod({mood:+12, social:+2, energy:-6}); d('Прогулка. Дома не стало меньше, но воздуха больше.');}},
+      { key: 'train', name: 'Тренировка (1ч)', dur: 1, apply(){mod({energy:-12, health:+6, mood:+3}); d('Железо постонало, но уважает тебя.');}},
+      { key: 'create', name: 'Творчество (2ч)', dur: 2, apply(){mod({energy:-10, mood:+8}); d('Творчество. Что-то получилось, даже если это шум.');}},
+      { key: 'freelance', name: 'Фриланс (2ч)', dur: 2, apply(){const cash=randInt(60,120); money(+cash); mod({energy:-15, mood:-5, social:-3}); d(`Фриланс. Продал 2 часа жизни за ${cash}₽.`);}},
+      { key: 'doom', name: 'Залип в сети (1ч)', dur: 1, apply(){const swing = Math.random()<0.5? +4 : -6; mod({energy:-8, mood:swing}); d(swing>0? 'Интернет. Нашёл мем и смысл на 15 минут.' : 'Интернет. Ещё одна дырка в внимании.'); chanceEvent();}},
+    ];
+
+    // ---------- UI helpers ----------
+    function $(sel){ return document.querySelector(sel); }
+    const dayEl=$('#day'), clockEl=$('#clock'), moneyEl=$('#money'), actionsEl=$('#actions'), logEl=$('#log');
+
+    function d(text){
+      const p=document.createElement('div');
+      const ts = `[Д${S.day} ${fmtTime(S.hour)}]`;
+      p.textContent = ts + ' ' + text;
+      logEl.appendChild(p); logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function fmtTime(h){
+      const hh = Math.floor(h).toString().padStart(2,'0');
+      const mm = Math.round((h%1)*60).toString().padStart(2,'0');
+      return `${hh}:${mm}`;
+    }
+
+    function money(delta){ S.money += delta; if(S.money<0) S.money=0; }
+
+    function clamp(v,min=0,max=100){ return Math.max(min, Math.min(max, v)); }
+
+    function mod(delta){
+      for(const k in delta){
+        S.stats[k] = clamp((S.stats[k] ?? 0) + delta[k]);
+      }
+      renderStats();
+    }
+
+    // ---------- Render stats ----------
+    const statKeys=[
+      {k:'energy', label:'Энергия', invert:false},
+      {k:'health', label:'Здоровье', invert:false},
+      {k:'mood', label:'Настроение', invert:false},
+      {k:'hunger', label:'Голод', invert:true},
+      {k:'hygiene', label:'Гигиена', invert:false},
+      {k:'social', label:'Социальность', invert:false},
+    ];
+
+    function makeStatRow(container,label,key,invert){
+      const tpl = document.getElementById('stat-row');
+      const node = tpl.content.firstElementChild.cloneNode(true);
+      node.querySelector('.label').textContent = label;
+      node.dataset.key = key;
+      node.dataset.invert = invert? '1':'0';
+      container.appendChild(node);
+    }
+
+    function renderStats(){
+      moneyEl.textContent = S.money;
+      dayEl.textContent = S.day;
+      clockEl.textContent = fmtTime(S.hour);
+      document.querySelectorAll('[data-key]').forEach(node=>{
+        const key=node.dataset.key;
+        const invert = node.dataset.invert==='1';
+        const v = clamp(S.stats[key]);
+        const shown = invert? (100 - v) : v;
+        node.querySelector('.value').textContent = Math.round(shown)+'%';
+        const bar = node.querySelector('.bar-inner');
+        bar.style.width = shown+'%';
+        bar.className = 'bar-inner ' + (shown<=25? 'bg-red-500' : shown>=70? 'bg-green-500' : 'bg-blue-500');
+      });
+    }
+
+    // ---------- Build UI ----------
+    (function initUI(){
+      const cols = document.querySelectorAll('.bg-zinc-900.rounded-2xl.p-3.space-y-2');
+      // left 3 stats
+      makeStatRow(cols[0], 'Энергия', 'energy', false);
+      makeStatRow(cols[0], 'Здоровье', 'health', false);
+      makeStatRow(cols[0], 'Настроение', 'mood', false);
+      // right 3 stats
+      makeStatRow(cols[1], 'Голод', 'hunger', true);
+      makeStatRow(cols[1], 'Гигиена', 'hygiene', false);
+      makeStatRow(cols[1], 'Социальность', 'social', false);
+
+      actions.forEach(a=>{
+        const btn=document.createElement('button');
+        btn.className='text-left px-3 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800';
+        btn.textContent=a.name;
+        btn.onclick=()=> startActivity(a);
+        actionsEl.appendChild(btn);
+      });
+
+      document.querySelectorAll('.speed').forEach(b=>{
+        b.onclick=()=>{ S.speed = Number(b.dataset.speed)||1; d(`Скорость ${S.speed}×.`); };
+      });
+      document.getElementById('btn-pause').onclick=()=>{ S.paused=!S.paused; d(S.paused? 'Пауза. Жизнь подождёт.' : 'Продолжаем.'); };
+
+      document.getElementById('btn-save').onclick=saveGame;
+      document.getElementById('btn-load').onclick=loadGame;
+      document.getElementById('btn-new').onclick=()=>{ if(confirm('Начать новую жизнь? Текущий прогресс будет стёрт.')){ newGame(); } };
+
+      renderStats();
+      d('Начало симуляции. День 1, 08:00.');
+    })();
+
+    // ---------- Activities ----------
+    function startActivity(a){
+      if(S.activity){ d('Занят. Сначала закончи текущее.'); return; }
+      S.activity = { key:a.key, name:a.name, left:a.dur, apply:a.apply };
+      d('Начал: ' + a.name);
+    }
+
+    function tick(dt){
+      if(S.paused) return;
+      // время
+      S.hour += dt;
+      while(S.hour>=24){ S.hour-=24; S.day++; }
+
+      // пассивный дрейн
+      mod({ energy:-0.5*dt*2, hunger:+0.5*dt*2, mood:-0.1*dt*2 });
+
+      // активность
+      if(S.activity){
+        S.activity.left -= dt;
+        if(S.activity.left<=0){
+          S.activity.apply();
+          S.activity=null;
+        }
+      }
+
+      renderStats();
+    }
+
+    // ---------- Loop ----------
+    let acc=0; const STEP=0.5; // 30 минут за тик
+    setInterval(()=>{
+      const mult = S.speed||1;
+      for(let i=0;i<mult;i++) tick(STEP);
+    }, 1000);
+
+    // ---------- Events ----------
+    function chanceEvent(){
+      if(Math.random()<0.25){
+        const roll = Math.random();
+        if(roll<0.5){ money(+20); d('Случай: на улице подобрал 20₽. Карма в плюсе.'); }
+        else { money(-20); d('Случай: доставка взяла «непредвиденную комиссию» −20₽.'); }
+      }
+    }
+
+    // ---------- Save/Load ----------
+    function saveGame(){
+      const data = JSON.stringify(S);
+      localStorage.setItem('lifesim.save.v1', data);
+      d('Сейв выполнен.');
+    }
+    function loadGame(){
+      const raw = localStorage.getItem('lifesim.save.v1');
+      if(!raw){ d('Сейва нет.'); return; }
+      try{
+        const s = JSON.parse(raw);
+        Object.assign(S, s);
+        renderStats();
+        d('Сейв загружен.');
+      }catch(e){ d('Не удалось загрузить сейв.'); }
+    }
+    function newGame(){
+      S.day=1; S.hour=8; S.money=200; S.speed=1; S.paused=false; S.activity=null;
+      S.stats={ health:70, energy:60, mood:55, hunger:40, hygiene:65, social:45 };
+      renderStats();
+      logEl.innerHTML=''; d('Новая жизнь. Пустой инвентарь, полная неопределённость.');
+    }
+
+    // ---------- Utils ----------
+    function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+  </script>
+</body>
+</html>
