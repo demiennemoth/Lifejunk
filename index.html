@@ -3,135 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Moth Demienne: System</title>
+
+  <title>Moth Demienne: System — симулятор моли</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Moth Demienne: System — минималистичный life-sim в эстетике тёмного Windows 95. Симулятор моли, которая выживает на свете и тепле." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph (для превью в соцсетях, когда укажешь реальный домен) -->
+  <!-- ЗАМЕНИ href/контент на реальные URL, когда зальёшь сайт -->
+  <!-- <link rel="canonical" href="https://example.com/" /> -->
+  <!-- <meta property="og:url" content="https://example.com/" /> -->
+  <meta property="og:title" content="Moth Demienne: System" />
+  <meta property="og:description" content="Тёмный life-sim о моли, которая живёт на свете лампочки и твоём внимании." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="images/moth_realistic.png" />
+
+  <!-- Favicon (по желанию) -->
+  <!-- <link rel="icon" type="image/png" href="images/favicon.png" /> -->
+
+  <!-- Tailwind через CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-/* Windows 95 Dark Edition — Version A */
-
-:root {
-  --w95-bg: #000;
-  --w95-window: #111;
-  --w95-window-light: #333;
-  --w95-window-dark: #000;
-  --w95-text: #e5e5e5;
-  --w95-title: #060612;
-  --w95-title-text: #f5f5f5;
-}
-
-body {
-  background: var(--w95-bg) !important;
-  color: var(--w95-text) !important;
-  font-family: "MS Sans Serif", Tahoma, sans-serif !important;
-}
-
-/* MAIN WINDOW */
-.max-w-5xl {
-  background: var(--w95-window) !important;
-  border-top: 2px solid var(--w95-window-light) !important;
-  border-left: 2px solid var(--w95-window-light) !important;
-  border-right: 2px solid var(--w95-window-dark) !important;
-  border-bottom: 2px solid var(--w95-window-dark) !important;
-  box-shadow: 3px 3px 0 #000 !important;
-}
-
-/* TITLE BAR */
-header {
-  background: var(--w95-title) !important;
-  color: var(--w95-title-text) !important;
-  border-bottom: 2px solid #000 !important;
-  padding: 4px 6px !important;
-  margin: -6px -6px 8px -6px !important;
-}
-
-header h1, header span {
-  color: var(--w95-title-text) !important;
-}
-
-/* PANELS */
-.bg-zinc-900, .bg-zinc-800, .bg-zinc-700, .bg-zinc-950 {
-  background: var(--w95-window) !important;
-  border-top: 2px solid var(--w95-window-light) !important;
-  border-left: 2px solid var(--w95-window-light) !important;
-  border-right: 2px solid #000 !important;
-  border-bottom: 2px solid #000 !important;
-  border-radius: 0 !important;
-}
-
-/* BUTTONS */
-button {
-  background: #181818 !important;
-  color: var(--w95-text) !important;
-  border-top: 2px solid var(--w95-window-light) !important;
-  border-left: 2px solid var(--w95-window-light) !important;
-  border-right: 2px solid #000 !important;
-  border-bottom: 2px solid #000 !important;
-  border-radius: 0 !important;
-  font-size: 11px !important;
-  padding: 2px 8px !important;
-}
-
-button:active {
-  border-top: 2px solid #000 !important;
-  border-left: 2px solid #000 !important;
-  border-right: 2px solid var(--w95-window-light) !important;
-  border-bottom: 2px solid var(--w95-window-light) !important;
-}
-
-/* INPUTS */
-input {
-  background: #141414 !important;
-  color: var(--w95-text) !important;
-  border: 2px solid #000 !important;
-  padding: 2px 4px !important;
-  font-size: 11px !important;
-}
-
-/* LOG WINDOW */
-#log {
-  background: #050505 !important;
-  color: var(--w95-text) !important;
-  border: 2px solid #000 !important;
-  font-family: "Lucida Console", monospace !important;
-  font-size: 11px !important;
-}
-
-/* STATS BAR */
-.bar {
-  background: #050505 !important;
-  border: 1px solid #000 !important;
-  border-radius: 0 !important;
-}
-
-.bar-inner {
-  background: #3f7ad8 !important;
-  border-right: 1px solid black !important;
-}
-
-/* TEXT FIXES */
-.text-zinc-100, .text-zinc-200, .text-zinc-300, .text-zinc-400 {
-  color: var(--w95-text) !important;
-}
-
-</style>
-
-  <style>
-    .bar{height:8px;border-radius:9999px;}
-    .bar-inner{height:8px;border-radius:9999px;transition:width .25s linear;}
-    .log{font-variant-ligatures: none;}
-  </style>
+  <!-- Кастомные стили -->
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="h-full bg-zinc-950 text-zinc-100">
   <div class="max-w-5xl mx-auto p-4 md:p-6 space-y-4">
     <header class="flex items-center justify-between">
-      <h1 class="text-xl md:text-2xl font-bold">Moth Demienne: System <span class="text-zinc-400 text-base">v0.1 mock</span></h1>
+      <h1 class="text-xl md:text-2xl font-bold">
+        Moth Demienne: System
+        <span class="text-zinc-400 text-base">v0.1 mock</span>
+      </h1>
       <div class="flex items-center gap-2 text-sm">
         <button id="btn-new" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700">Новая жизнь</button>
         <button id="btn-save" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700">Сохранить</button>
         <button id="btn-load" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700">Загрузить</button>
       </div>
     </header>
-
 
     <!-- AUTH BAR -->
     <div id="auth" class="flex flex-wrap items-center gap-2 text-sm mb-4">
@@ -143,407 +53,97 @@ input {
       <span id="whoami" class="text-zinc-400"></span>
     </div>
 
-
-    <section class="grid md:grid-cols-3 gap-4">
-      <!-- HUD -->
-      <div class="md:col-span-2 space-y-4">
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <div class="px-3 py-2 bg-zinc-900 rounded-2xl">
-            <div class="text-xs text-zinc-400">День / время</div>
-            <div class="text-lg font-semibold"><span id="day">1</span>, <span id="clock">08:00</span></div>
-          </div>
-          <div class="px-3 py-2 bg-зinc-900 rounded-2xl">
-            <div class="text-xs text-zinc-400">Деньги</div>
-            <div class="text-lg font-semibold"><span id="money">200</span> ₽</div>
-          </div>
-          <div class="px-3 py-2 bg-zinc-900 rounded-2xl">
-            <div class="text-xs text-zinc-400">Скорость</div>
-            <div class="flex gap-2 mt-1">
-              <button data-speed="1" class="speed px-2 py-1 rounded-lg bg-zinc-800">1×</button>
-              <button data-speed="2" class="speed px-2 py-1 rounded-lg bg-zinc-800">2×</button>
-              <button data-speed="4" class="speed px-2 py-1 rounded-lg bg-зinc-800">4×</button>
-              <button id="btn-pause" class="px-2 py-1 rounded-lg bg-зinc-800">⏸</button>
+    <main class="space-y-6">
+      <section class="grid md:grid-cols-3 gap-4">
+        <!-- HUD -->
+        <div class="md:col-span-2 space-y-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="px-3 py-2 bg-zinc-900 rounded-2xl">
+              <div class="text-xs text-zinc-400">День / время</div>
+              <div class="text-lg font-semibold">
+                <span id="day">1</span>, <span id="clock">08:00</span>
+              </div>
+            </div>
+            <div class="px-3 py-2 bg-zinc-900 rounded-2xl">
+              <div class="text-xs text-zinc-400">Деньги</div>
+              <div class="text-lg font-semibold">
+                <span id="money">200</span> ₽
+              </div>
+            </div>
+            <div class="px-3 py-2 bg-zinc-900 rounded-2xl">
+              <div class="text-xs text-zinc-400">Скорость</div>
+              <div class="flex gap-2 mt-1">
+                <button data-speed="1" class="speed px-2 py-1 rounded-lg bg-zinc-800">1×</button>
+                <button data-speed="2" class="speed px-2 py-1 rounded-lg bg-zinc-800">2×</button>
+                <button data-speed="4" class="speed px-2 py-1 rounded-lg bg-zinc-800">4×</button>
+                <button id="btn-pause" class="px-2 py-1 rounded-lg bg-zinc-800">⏸</button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="grid sm:grid-cols-2 gap-3">
-          <div class="bg-zinc-900 rounded-2xl p-3 space-y-2">
-            <Stat label="Энергия" key="energy" />
-            <Stat label="Здоровье" key="health" />
-            <Stat label="Настроение" key="mood" />
-          </div>
-          <div class="bg-zinc-900 rounded-2xl p-3 space-y-2">
-            <Stat label="Голод" key="hunger" invert />
-            <Stat label="Гигиена" key="hygiene" />
-            <Stat label="Социальность" key="social" />
+          <!-- Контейнеры для статов (JS сам туда всё вставит) -->
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div class="bg-zinc-900 rounded-2xl p-3 space-y-2" data-stats-column="left"></div>
+            <div class="bg-zinc-900 rounded-2xl p-3 space-y-2" data-stats-column="right"></div>
           </div>
         </div>
-      </div>
 
-      <!-- Actions -->
-      <div class="space-y-3">
-        <h2 class="text-sm uppercase tracking-wide text-зinc-400">Действия</h2>
-        <div id="actions" class="grid gap-2">
-          <!-- buttons will be injected -->
+        <!-- Actions -->
+        <aside class="space-y-3">
+          <h2 class="text-sm uppercase tracking-wide text-zinc-400">Действия</h2>
+          <div id="actions" class="grid gap-2">
+            <!-- кнопки будут созданы скриптом -->
+          </div>
+        </aside>
+      </section>
+
+      <section class="mt-6">
+        <h2 class="text-sm uppercase tracking-wide text-zinc-400 mb-2">Профиль</h2>
+        <div class="flex flex-col sm:flex-row bg-zinc-900 rounded-2xl overflow-hidden shadow-lg ring-1 ring-zinc-800">
+          <div class="sm:w-1/3">
+            <img src="images/moth_realistic.png" alt="Моль — подопечный в симуляторе" class="object-cover w-full h-full grayscale opacity-80" />
+          </div>
+          <div class="sm:w-2/3 p-4 space-y-2 text-sm">
+            <h3 class="text-lg font-semibold text-zinc-100">L. Atramentaria</h3>
+            <p class="italic text-zinc-400">"Ты — моль. Ты ешь свет, чтобы не умереть."</p>
+            <ul class="space-y-1">
+              <li><strong class="text-zinc-300">Ранг:</strong> Теневая моль</li>
+              <li><strong class="text-zinc-300">Температура лампочки:</strong> 37°C</li>
+              <li><strong class="text-zinc-300">Потребность в свете:</strong> 91%</li>
+              <li><strong class="text-zinc-300">Состояние крыльев:</strong> Пыльная гармония</li>
+              <li><strong class="text-zinc-300">Состояние:</strong> Грусть, но уют</li>
+            </ul>
+            <p class="text-zinc-400 mt-2">
+              В темноте она находит свет. В тепле — смысл. В тебе — дом.
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    
-<section class="mt-6">
-  <h2 class="text-sm uppercase tracking-wide text-зinc-400 mb-2">Профиль</h2>
-  <div class="flex flex-col sm:flex-row bg-зinc-900 rounded-2xl overflow-hidden shadow-lg ring-1 ring-зinc-800">
-    <div class="sm:w-1/3">
-      <img src="images/moth_realistic.png" alt="Моль-подопечный" class="object-cover w-full h-full grayscale opacity-80" />
-    </div>
-    <div class="sm:w-2/3 p-4 space-y-2 text-sm">
-      <h3 class="text-lg font-semibold text-зinc-100">L. Atramentaria</h3>
-      <p class="italic text-зinc-400">"Ты — моль. Ты ешь свет, чтобы не умереть."</p>
-      <ul class="space-y-1">
-        <li><strong class="text-зinc-300">Ранг:</strong> Теневая моль</li>
-        <li><strong class="text-зinc-300">Температура лампочки:</strong> 37°C</li>
-        <li><strong class="text-зinc-300">Потребность в свете:</strong> 91%</li>
-        <li><strong class="text-зinc-300">Состояние крыльев:</strong> Пыльная гармония</li>
-        <li><strong class="text-зinc-300">Состояние:</strong> Грусть, но уют</li>
-      </ul>
-      <p class="text-зinc-400 mt-2">В темноте она находит свет. В тепле — смысл. В тебе — дом.</p>
-    </div>
-  </div>
-</section>
-
-<section>
-      <h2 class="text-sm uppercase tracking-wide text-зinc-400 mb-2">Лог</h2>
-      <div id="log" class="log bg-зinc-900 rounded-2xl p-3 h-56 overflow-auto text-sm space-y-1"></div>
-    </section>
+      <section>
+        <h2 class="text-sm uppercase tracking-wide text-zinc-400 mb-2">Лог</h2>
+        <div id="log" class="log bg-zinc-900 rounded-2xl p-3 h-56 overflow-auto text-sm space-y-1"></div>
+      </section>
+    </main>
   </div>
 
+  <!-- Шаблон строки статов -->
   <template id="stat-row">
     <div>
-      <div class="flex items-center justify-between text-xs text-зinc-400 mb-1">
+      <div class="flex items-center justify-between text-xs text-zinc-400 mb-1">
         <span class="label"></span>
-        <span class="value text-зinc-200 font-medium"></span>
+        <span class="value text-zinc-200 font-medium"></span>
       </div>
-      <div class="bar bg-зinc-800 w-full"><div class="bar-inner bg-зinc-600 w-1/2"></div></div>
+      <div class="bar bg-zinc-800 w-full">
+        <div class="bar-inner bg-zinc-600 w-1/2"></div>
+      </div>
     </div>
   </template>
 
-  <script>
-    // ---------- State ----------
-    const S = {
-      day: 1,
-      hour: 8,
-      money: 200,
-      stats: { health: 70, energy: 60, mood: 55, hunger: 40, hygiene: 65, social: 45 },
-      activity: null,
-      speed: 1,
-      paused: false,
-      buffs: { satietyUntil: 0, restedUntil: 0 },
-    };
+  <!-- Игровая логика -->
+  <script src="script.js"></script>
 
-    const actions = [
-      { key: 'sleep', name: 'Поспать (4ч)', dur: 4, apply(){d('Сон. Ты и одеяло подписали перемирие. Бодрость на 8 часов.'); S.buffs.restedUntil = Math.max(S.buffs.restedUntil, worldHours()+8); mod({energy:+40, health:+5, hunger:+5});}},
-      { key: 'ramen', name: 'Рамэн (0.5ч)', dur: 0.5, apply(){money(-5); mod({hunger:-30, mood:+3}); S.buffs.satietyUntil = Math.max(S.buffs.satietyUntil, worldHours()+6); d('Рамэн. Солёная химия, но душа теплее. Сытость на 6 часов.');}},
-      { key: 'shower', name: 'Душ (0.5ч)', dur: 0.5, apply(){mod({hygiene:+35, energy:+5}); d('Душ. Мир стал на 10% терпимее.');}},
-      { key: 'walk', name: 'Гулять в наушниках (1ч)', dur: 1, apply(){mod({mood:+12, social:+2, energy:-6}); d('Прогулка. Дома не стало меньше, но воздуха больше.');}},
-      { key: 'train', name: 'Тренировка (1ч)', dur: 1, apply(){mod({energy:-12, health:+6, mood:+3}); d('Железо постонало, но уважает тебя.');}},
-      { key: 'create', name: 'Творчество (2ч)', dur: 2, apply(){mod({energy:-10, mood:+8}); d('Творчество. Что-то получилось, даже если это шум.');}},
-      { key: 'freelance', name: 'Фриланс (2ч)', dur: 2, apply(){const cash=randInt(60,120); money(+cash); mod({energy:-15, mood:-5, social:-3}); d(`Фриланс. Продал 2 часа жизни за ${cash}₽.`);}},
-      { key: 'doom', name: 'Залип в сети (1ч)', dur: 1, apply(){const swing = Math.random()<0.5? +4 : -6; mod({energy:-8, mood:swing}); d(swing>0? 'Интернет. Нашёл мем и смысл на 15 минут.' : 'Интернет. Ещё одна дырка в внимании.'); chanceEvent();}},
-    ];
-
-    // ---------- UI helpers ----------
-    function $(sel){ return document.querySelector(sel); }
-    const dayEl=$('#day'), clockEl=$('#clock'), moneyEl=$('#money'), actionsEl=$('#actions'), logEl=$('#log');
-
-    function d(text){
-      const p=document.createElement('div');
-      const ts = `[Д${S.day} ${fmtTime(S.hour)}]`;
-      p.textContent = ts + ' ' + text;
-      logEl.appendChild(p); logEl.scrollTop = logEl.scrollHeight;
-    }
-
-    function fmtTime(h){
-      const hh = Math.floor(h).toString().padStart(2,'0');
-      const mm = Math.round((h%1)*60).toString().padStart(2,'0');
-      return `${hh}:${mm}`;
-    }
-
-    function money(delta){ S.money += delta; if(S.money<0) S.money=0; }
-
-    function clamp(v,min=0,max=100){ return Math.max(min, Math.min(max, v)); }
-
-    function mod(delta){
-      for(const k in delta){
-        S.stats[k] = clamp((S.stats[k] ?? 0) + delta[k]);
-      }
-      renderStats();
-    }
-
-    // ---------- Render stats ----------
-    const statKeys=[
-      {k:'energy', label:'Энергия', invert:false},
-      {k:'health', label:'Здоровье', invert:false},
-      {k:'mood', label:'Настроение', invert:false},
-      {k:'hunger', label:'Голод', invert:true},
-      {k:'hygiene', label:'Гигиена', invert:false},
-      {k:'social', label:'Социальность', invert:false},
-    ];
-
-    function makeStatRow(container,label,key,invert){
-      const tpl = document.getElementById('stat-row');
-      const node = tpl.content.firstElementChild.cloneNode(true);
-      node.querySelector('.label').textContent = label;
-      node.dataset.key = key;
-      node.dataset.invert = invert? '1':'0';
-      container.appendChild(node);
-    }
-
-    function renderStats(){
-      moneyEl.textContent = S.money;
-      dayEl.textContent = S.day;
-      clockEl.textContent = fmtTime(S.hour);
-      document.querySelectorAll('[data-key]').forEach(node=>{
-        const key=node.dataset.key;
-        const invert = node.dataset.invert==='1';
-        const v = clamp(S.stats[key]);
-        const shown = invert? (100 - v) : v;
-        node.querySelector('.value').textContent = Math.round(shown)+'%';
-        const bar = node.querySelector('.bar-inner');
-        bar.style.width = shown+'%';
-        bar.className = 'bar-inner ' + (shown<=25? 'bg-red-500' : shown>=70? 'bg-green-500' : 'bg-blue-500');
-      });
-    }
-
-    // ---------- Build UI ----------
-    (function initUI(){
-      const cols = document.querySelectorAll('.bg-zinc-900.rounded-2xl.p-3.space-y-2');
-      // left 3 stats
-      makeStatRow(cols[0], 'Энергия', 'energy', false);
-      makeStatRow(cols[0], 'Здоровье', 'health', false);
-      makeStatRow(cols[0], 'Настроение', 'mood', false);
-      // right 3 stats
-      makeStatRow(cols[1], 'Голод', 'hunger', true);
-      makeStatRow(cols[1], 'Гигиена', 'hygiene', false);
-      makeStatRow(cols[1], 'Социальность', 'social', false);
-
-      actions.forEach(a=>{
-        const btn=document.createElement('button');
-        btn.className='text-left px-3 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800';
-        btn.textContent=a.name;
-        btn.onclick=()=> startActivity(a);
-        actionsEl.appendChild(btn);
-      });
-
-      document.querySelectorAll('.speed').forEach(b=>{
-        b.onclick=()=>{ S.speed = Number(b.dataset.speed)||1; d(`Скорость ${S.speed}×.`); };
-      });
-      document.getElementById('btn-pause').onclick=()=>{ S.paused=!S.paused; d(S.paused? 'Пауза. Жизнь подождёт.' : 'Продолжаем.'); };
-
-      document.getElementById('btn-save').onclick=saveGame;
-      document.getElementById('btn-load').onclick=loadGame;
-      document.getElementById('btn-new').onclick=()=>{ if(confirm('Начать новую жизнь? Текущий прогресс будет стёрт.')){ newGame(); } };
-
-      renderStats();
-      d('Начало симуляции. День 1, 08:00.');
-    })();
-
-    
-// ---------- Time helpers ----------
-function worldHours(){ return S.day*24 + S.hour; }
-
-// ---------- Activities ----------
-    function startActivity(a){
-      if(S.activity){ d('Занят. Сначала закончи текущее.'); return; }
-      S.activity = { key:a.key, name:a.name, left:a.dur, apply:a.apply };
-      d('Начал: ' + a.name);
-    }
-
-    function tick(dt){
-      if(S.paused) return;
-      // время
-      S.hour += dt;
-      while(S.hour>=24){ S.hour-=24; S.day++; }
-
-      
-// пассивный дрейн с учётом баффов (сытость/отдохнувший)
-const wh = worldHours();
-const hungerRate = (wh < S.buffs.satietyUntil) ? 0.05 : 0.15;   // голод растёт медленнее при сытости
-const energyRate = (wh < S.buffs.restedUntil) ? 0.05 : 0.20;    // энергия утекает медленнее, пока "отдохнувший"
-const moodRate   = 0.02;
-mod({ energy: -energyRate*dt, hunger: +hungerRate*dt, mood: -moodRate*dt });
-// активность
-      if(S.activity){
-        S.activity.left -= dt;
-        if(S.activity.left<=0){
-          S.activity.apply();
-          S.activity=null;
-        }
-      }
-
-      renderStats();
-    }
-
-    
-// ---------- Loop ----------
-// Реальное время -> игровые часы. 12 реальных часов = 24 игровых (TIME_SCALE = 2).
-const TIME_SCALE = 2; // игровых часа за реальный час (день = 12 реальных часов)
-let lastTs = performance.now();
-setInterval(() => {
-  if(S.paused) { lastTs = performance.now(); return; }
-  const now = performance.now();
-  const realHours = (now - lastTs) / 3600000; // часы реального времени
-  lastTs = now;
-  const dt = realHours * TIME_SCALE * (S.speed||1);
-  tick(dt);
-}, 1000);
-
-// ---------- Events ----------
-
-    function chanceEvent(){
-      if(Math.random()<0.25){
-        const roll = Math.random();
-        if(roll<0.5){ money(+20); d('Случай: на улице подобрал 20₽. Карма в плюсе.'); }
-        else { money(-20); d('Случай: доставка взяла «непредвиденную комиссию» −20₽.'); }
-      }
-    }
-
-    // ---------- Save/Load ----------
-    function saveGame(){
-      const data = JSON.stringify(S);
-      localStorage.setItem('lifesim.save.v1', data);
-      d('Сейв выполнен.');
-    }
-    function loadGame(){
-      const raw = localStorage.getItem('lifesim.save.v1');
-      if(!raw){ d('Сейва нет.'); return; }
-      try{
-        const s = JSON.parse(raw);
-        Object.assign(S, s);
-        renderStats();
-        d('Сейв загружен.');
-      }catch(e){ d('Не удалось загрузить сейв.'); }
-    }
-    function newGame(){
-      S.day=1; S.hour=8; S.money=200; S.speed=1; S.paused=false; S.activity=null;
-      S.stats={ health:70, energy:60, mood:55, hunger:40, hygiene:65, social:45 };
-      renderStats();
-      logEl.innerHTML=''; d('Новая жизнь. Пустой инвентарь, полная неопределённость.');
-    }
-
-    // ---------- Utils ----------
-    function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-  </script>
-
-  <!-- Firebase Auth + Cloud Saves -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
-
-    // ======= INSERT YOUR CONFIG FROM FIREBASE CONSOLE =======
-    const firebaseConfig = {
-      apiKey: "AIzaSyA6uOS8shaJf69bCsFofUhr2BQxfMbguyQ",
-      authDomain: "lifejunk-b989d.firebaseapp.com",
-      projectId: "lifejunk-b989d",
-      storageBucket: "lifejunk-b989d.firebasestorage.app",
-      messagingSenderId: "736883566845",
-      appId: "1:736883566845:web:0b8a87e82ad2970e7ef694"
-    };
-    const app  = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db   = getFirestore(app);
-
-    // UI elements
-    const emailEl = document.getElementById('email');
-    const passEl  = document.getElementById('pass');
-    const btnSignup = document.getElementById('btn-signup');
-    const btnLogin  = document.getElementById('btn-login');
-    const btnLogout = document.getElementById('btn-logout');
-    const whoami    = document.getElementById('whoami');
-
-    function refreshAuthUI(user) {
-      const logged = !!user;
-      [emailEl, passEl, btnSignup, btnLogin].forEach(el => el?.classList.toggle('hidden', logged));
-      btnLogout?.classList.toggle('hidden', !logged);
-      if (whoami) whoami.textContent = logged ? ` · ${user.email || user.uid}` : '';
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-      refreshAuthUI(user);
-      if (user) await loadCloudSave();
-    });
-
-    btnSignup?.addEventListener('click', async () => {
-      try {
-        await createUserWithEmailAndPassword(auth, emailEl.value.trim(), passEl.value);
-        alert('Аккаунт создан. Теперь войди.');
-      } catch (e) { alert(e.message); }
-    });
-    btnLogin?.addEventListener('click', async () => {
-      try {
-        await signInWithEmailAndPassword(auth, emailEl.value.trim(), passEl.value);
-      } catch (e) { alert(e.message); }
-    });
-    btnLogout?.addEventListener('click', async () => { await signOut(auth); });
-
-    // ====== Cloud saves (Firestore) ======
-    if (!window.S) window.S = {};               // ensure S exists
-    if (!S.meta) S.meta = {};
-    function touchUpdated(){ S.meta.updatedAt = Date.now(); }
-
-    async function saveCloud(){
-      const user = auth.currentUser;
-      if(!user) return;
-      try{
-        await setDoc(doc(db, "saves", user.uid), {
-          data: S,
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-        // d && d('Облако: сейв сохранён.');
-      }catch(e){ console.warn('Cloud save error:', e.message); }
-    }
-
-    async function loadCloudSave(){
-      const user = auth.currentUser;
-      if(!user) return;
-      try{
-        const snap = await getDoc(doc(db, "saves", user.uid));
-        if(snap.exists()){
-          const cloud = snap.data().data;
-          const localTs = (S.meta && S.meta.updatedAt) || 0;
-          const cloudTs = (cloud.meta && cloud.meta.updatedAt) || 0;
-          if (cloudTs >= localTs){
-            Object.assign(S, cloud);
-            try{ renderStats(); d && d('Облако: сейв загружен.'); }catch(_){}
-          } else {
-            await saveCloud();
-          }
-        } else {
-          await saveCloud();
-        }
-      }catch(e){ console.warn('Cloud load error:', e.message); }
-    }
-
-    // Debounced autosave
-    let cloudTimer;
-    function autosaveCloudDebounced(){
-      clearTimeout(cloudTimer);
-      cloudTimer = setTimeout(saveCloud, 1500);
-    }
-
-    // Patch tick() to add autosave without touching your game code
-    const _tick = window.tick;
-    if (typeof _tick === 'function'){
-      window.tick = function(dt){
-        _tick(dt);
-        try {
-          touchUpdated();
-          autosaveCloudDebounced();
-        } catch(_){}
-      }
-    }
-  </script>
-
+  <!-- Firebase + облачные сейвы -->
+  <script type="module" src="firebase.js"></script>
 </body>
 </html>
