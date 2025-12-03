@@ -5,6 +5,116 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lifejunk</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+/* Windows 95 Dark Edition — Version A */
+
+:root {
+  --w95-bg: #000;
+  --w95-window: #111;
+  --w95-window-light: #333;
+  --w95-window-dark: #000;
+  --w95-text: #e5e5e5;
+  --w95-title: #060612;
+  --w95-title-text: #f5f5f5;
+}
+
+body {
+  background: var(--w95-bg) !important;
+  color: var(--w95-text) !important;
+  font-family: "MS Sans Serif", Tahoma, sans-serif !important;
+}
+
+/* MAIN WINDOW */
+.max-w-5xl {
+  background: var(--w95-window) !important;
+  border-top: 2px solid var(--w95-window-light) !important;
+  border-left: 2px solid var(--w95-window-light) !important;
+  border-right: 2px solid var(--w95-window-dark) !important;
+  border-bottom: 2px solid var(--w95-window-dark) !important;
+  box-shadow: 3px 3px 0 #000 !important;
+}
+
+/* TITLE BAR */
+header {
+  background: var(--w95-title) !important;
+  color: var(--w95-title-text) !important;
+  border-bottom: 2px solid #000 !important;
+  padding: 4px 6px !important;
+  margin: -6px -6px 8px -6px !important;
+}
+
+header h1, header span {
+  color: var(--w95-title-text) !important;
+}
+
+/* PANELS */
+.bg-zinc-900, .bg-zinc-800, .bg-zinc-700, .bg-zinc-950 {
+  background: var(--w95-window) !important;
+  border-top: 2px solid var(--w95-window-light) !important;
+  border-left: 2px solid var(--w95-window-light) !important;
+  border-right: 2px solid #000 !important;
+  border-bottom: 2px solid #000 !important;
+  border-radius: 0 !important;
+}
+
+/* BUTTONS */
+button {
+  background: #181818 !important;
+  color: var(--w95-text) !important;
+  border-top: 2px solid var(--w95-window-light) !important;
+  border-left: 2px solid var(--w95-window-light) !important;
+  border-right: 2px solid #000 !important;
+  border-bottom: 2px solid #000 !important;
+  border-radius: 0 !important;
+  font-size: 11px !important;
+  padding: 2px 8px !important;
+}
+
+button:active {
+  border-top: 2px solid #000 !important;
+  border-left: 2px solid #000 !important;
+  border-right: 2px solid var(--w95-window-light) !important;
+  border-bottom: 2px solid var(--w95-window-light) !important;
+}
+
+/* INPUTS */
+input {
+  background: #141414 !important;
+  color: var(--w95-text) !important;
+  border: 2px solid #000 !important;
+  padding: 2px 4px !important;
+  font-size: 11px !important;
+}
+
+/* LOG WINDOW */
+#log {
+  background: #050505 !important;
+  color: var(--w95-text) !important;
+  border: 2px solid #000 !important;
+  font-family: "Lucida Console", monospace !important;
+  font-size: 11px !important;
+}
+
+/* STATS BAR */
+.bar {
+  background: #050505 !important;
+  border: 1px solid #000 !important;
+  border-radius: 0 !important;
+}
+
+.bar-inner {
+  background: #3f7ad8 !important;
+  border-right: 1px solid black !important;
+}
+
+/* TEXT FIXES */
+.text-zinc-100, .text-zinc-200, .text-zinc-300, .text-zinc-400 {
+  color: var(--w95-text) !important;
+}
+
+</style>
+
   <style>
     .bar{height:8px;border-radius:9999px;}
     .bar-inner{height:8px;border-radius:9999px;transition:width .25s linear;}
