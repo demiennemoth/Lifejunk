@@ -9,18 +9,17 @@
   <!-- SEO -->
   <meta name="description" content="Moth Demienne: System — минималистичный life-sim в эстетике тёмного Windows 95. Симулятор моли, которая выживает на свете и тепле." />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://demiennemoth.github.io/system/" />
 
-  <!-- Open Graph (для превью в соцсетях, когда укажешь реальный домен) -->
-  <!-- ЗАМЕНИ href/контент на реальные URL, когда зальёшь сайт -->
-  <!-- <link rel="canonical" href="https://example.com/" /> -->
-  <!-- <meta property="og:url" content="https://example.com/" /> -->
+  <!-- Open Graph -->
+  <meta property="og:url" content="https://demiennemoth.github.io/system/" />
   <meta property="og:title" content="Moth Demienne: System" />
-  <meta property="og:description" content="Тёмный life-sim о моли, которая живёт на свете лампочки и твоём внимании." />
+  <meta property="og:description" content="Тёмный life-sим о моли, которая живёт на свете лампочки и твоём внимании." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="images/moth_realistic.png" />
+  <meta property="og:image" content="https://demiennemoth.github.io/system/images/moth_realistic.png" />
 
-  <!-- Favicon (по желанию) -->
-  <!-- <link rel="icon" type="image/png" href="images/favicon.png" /> -->
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/moth_realistic.png" />
 
   <!-- Tailwind через CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -92,7 +91,6 @@
         <aside class="space-y-3">
           <h2 class="text-sm uppercase tracking-wide text-zinc-400">Действия</h2>
           <div id="actions" class="grid gap-2">
-            <!-- кнопки будут созданы скриптом -->
           </div>
         </aside>
       </section>
@@ -127,7 +125,6 @@
     </main>
   </div>
 
-  <!-- Шаблон строки статов -->
   <template id="stat-row">
     <div>
       <div class="flex items-center justify-between text-xs text-zinc-400 mb-1">
@@ -140,10 +137,7 @@
     </div>
   </template>
 
-  <!-- Игровая логика -->
   <script src="script.js"></script>
-
-  <!-- Firebase + облачные сейвы -->
   <script type="module" src="firebase.js"></script>
 </body>
 </html>
