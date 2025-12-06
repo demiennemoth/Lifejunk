@@ -19,18 +19,18 @@ const S = {
     restedUntil: 0,
   },
   hidden: {
-    dust: 0,        // пыль на крыльях / в комнате
-    fog: 0,         // туман в голове
-    fragility: 0,   // хрупкость крыльев (перегруз тела)
-    deaths: 0,      // сколько раз "крылья устали"
+    dust: 0,
+    fog: 0,
+    fragility: 0,
+    deaths: 0,
   },
   counters: {
-    walk: 0,        // изоляция в наушниках
-    freelance: 0,   // ночной труд
-    daysNoShower: 0,// дней без "Смыть пыль"
+    walk: 0,
+    freelance: 0,
+    daysNoShower: 0,
   },
-  achievements: {}, // флаги достижений
-  journal: [],       // записи журнала Моли
+  achievements: {},
+  journal: [],
 };
 
 // ---------- Действия ----------
@@ -43,7 +43,6 @@ const actions = [
       d("Сон. Ты и одеяло подписали перемирие. Бодрость на 8 часов.");
       S.buffs.restedUntil = Math.max(S.buffs.restedUntil, worldHours() + 8);
       mod({ energy: +40, health: +5, hunger: +5 });
-      // сон чуть лечит хрупкость крыльев и туман
       S.hidden.fragility = clamp(S.hidden.fragility - 10, 0, 100);
       S.hidden.fog = clamp(S.hidden.fog - 5, 0, 100);
       pushJournal("Сон", "Ты ненадолго отпустил(а) мир и крылья.");
@@ -81,7 +80,7 @@ const actions = [
       mod({ mood: +12, social: +2, energy: -6 });
       d("Изоляция в наушниках. Дома не стало меньше, но воздуха больше.");
       S.counters.walk++;
-      S.hidden.fog = clamp(S.hidden.fog - 3, 0, 100); // музыка чуть рассеивает туман
+      S.hidden.fog = clamp(S.hidden.fog - 3, 0, 100);
       checkAchievements();
       pushJournal("Изоляция", "Музыка держит мир на расстоянии.");
     },
@@ -104,7 +103,7 @@ const actions = [
     apply() {
       mod({ energy: -10, mood: +8 });
       d("Плетение проекта. Нити хаоса складываются во что-то своё.");
-      S.hidden.fog = clamp(S.hidden.fog - 7, 0, 100); // творчество проясняет голову
+      S.hidden.fog = clamp(S.hidden.fog - 7, 0, 100);
       pushJournal("Плетение", "Ты снова доказал(а), что из хаоса что-то выходит.");
     },
   },
@@ -190,15 +189,6 @@ function mod(delta) {
 }
 
 // ---------- Статы ----------
-const statKeys = [
-  { k: "energy", label: "Энергия", invert: false },
-  { k: "health", label: "Здоровье", invert: false },
-  { k: "mood", label: "Настроение", invert: false },
-  { k: "hunger", label: "Голод", invert: true },
-  { k: "hygiene", label: "Гигиена", invert: false },
-  { k: "social", label: "Социальность", invert: false },
-];
-
 function makeStatRow(container, label, key, invert) {
   const tpl = document.getElementById("stat-row");
   const node = tpl.content.firstElementChild.cloneNode(true);
@@ -219,15 +209,15 @@ function renderStats() {
     const v = clamp(S.stats[key]);
     const shown = invert ? 100 - v : v;
     node.querySelector(".value").textContent = Math.round(shown) + "%";
-    const bar = node.querySelector(".bar-inner");
-    bar.style.width = shown + "%";
-    bar.className =
-      "bar-inner " +
-      (shown <= 25
-        ? "bg-red-500"
-        : shown >= 70
-        ? "bg-green-500"
-        : "bg-blue-500");
+  const bar = node.querySelector(".bar-inner");
+  bar.style.width = shown + "%";
+  bar.className =
+    "bar-inner " +
+    (shown <= 25
+      ? "bg-red-500"
+      : shown >= 70
+      ? "bg-green-500"
+      : "bg-blue-500");
   });
 
   updateMoodVisuals();
@@ -238,12 +228,10 @@ function renderStats() {
   const leftCol = document.querySelector('[data-stats-column="left"]');
   const rightCol = document.querySelector('[data-stats-column="right"]');
 
-  // Левая колонка
   makeStatRow(leftCol, "Энергия", "energy", false);
   makeStatRow(leftCol, "Здоровье", "health", false);
   makeStatRow(leftCol, "Настроение", "mood", false);
 
-  // Правая колонка
   makeStatRow(rightCol, "Голод", "hunger", true);
   makeStatRow(rightCol, "Гигиена", "hygiene", false);
   makeStatRow(rightCol, "Социальность", "social", false);
@@ -292,7 +280,6 @@ function isNight() {
 
 function onNewDay() {
   S.counters.daysNoShower++;
-  // цитаты дня
   const quotes = [
     "День начинается. Крылья всё ещё с тобой.",
     "Новый день. Туман никуда не делся, но ты тоже.",
@@ -318,7 +305,6 @@ function startActivity(a) {
 function tick(dt) {
   if (S.paused) return;
 
-  // время
   S.hour += dt;
   while (S.hour >= 24) {
     S.hour -= 24;
@@ -328,7 +314,6 @@ function tick(dt) {
 
   const wh = worldHours();
 
-  // пассивный дрейн с учётом баффов
   const hungerRate = wh < S.buffs.satietyUntil ? 0.05 : 0.15;
   const energyRate = wh < S.buffs.restedUntil ? 0.05 : 0.2;
   const moodRate = 0.02;
@@ -339,28 +324,22 @@ function tick(dt) {
     mood: -moodRate * dt,
   });
 
-  // скрытые параметры
-  // пыль растёт, если гигиена низкая
   if (S.stats.hygiene < 60) {
     S.hidden.dust = clamp(S.hidden.dust + 0.3 * dt, 0, 100);
   } else {
     S.hidden.dust = clamp(S.hidden.dust - 0.1 * dt, 0, 100);
   }
 
-  // туман сам по себе медленно рассеивается
   S.hidden.fog = clamp(S.hidden.fog - 0.05 * dt, 0, 100);
 
-  // если пыль высокая — настроение падает быстрее
   if (S.hidden.dust > 70) {
     mod({ mood: -0.05 * dt });
   }
 
-  // если хрупкость высокая — здоровье капает
   if (S.hidden.fragility > 70) {
     mod({ health: -0.05 * dt });
   }
 
-  // активность
   if (S.activity) {
     S.activity.left -= dt;
     if (S.activity.left <= 0) {
@@ -369,9 +348,7 @@ function tick(dt) {
     }
   }
 
-  // ночные события
   if (isNight()) {
-    // шанс на ночное событие основан на тумане
     const nightChance = 0.01 * dt + (S.hidden.fog / 2000) * dt;
     if (Math.random() < nightChance) {
       nightEvent();
@@ -382,7 +359,6 @@ function tick(dt) {
 }
 
 // ---------- Игровой цикл ----------
-// 12 реальных часов = 24 игровых (TIME_SCALE = 2)
 const TIME_SCALE = 2;
 let lastTs = performance.now();
 
@@ -420,7 +396,6 @@ function talkWithShadow() {
   const text = phrases[randInt(0, phrases.length - 1)];
   d(text);
   pushJournal("Тень", text);
-  // тень чуть улучшает настроение, но не даёт много сил
   mod({ mood: +3 });
 }
 
@@ -443,7 +418,6 @@ function lampEvent() {
   const text = phrases[randInt(0, phrases.length - 1)];
   d(text);
   pushJournal("Лампа", text);
-  // чуть увеличиваем туман
   S.hidden.fog = clamp(S.hidden.fog + 3, 0, 100);
 }
 
@@ -569,7 +543,6 @@ function checkCollapse() {
     S.hidden.deaths = (S.hidden.deaths || 0) + 1;
     d("Крылья устали. Но туман держит.");
     pushJournal("Срыв", "Тело сдалось, но история продолжается.");
-    // маленькая пауза чисто логическая — перезапуск
     setTimeout(() => {
       newGame(true);
     }, 50);
@@ -584,7 +557,6 @@ function pushJournal(title, text) {
     title,
     text,
   });
-  // Пока журнал нигде не отображается, но он сохраняется и может использоваться позже.
 }
 
 function updateMoodVisuals() {
@@ -604,8 +576,6 @@ function updateMoodVisuals() {
 
   if (health <= 30) body.dataset.health = "fragile";
   else body.dataset.health = "normal";
-
-  // можно в CSS настроить стили по body[data-time="night"][data-mood="low"] и т.д.
 }
 
 // ---------- Утилиты ----------
@@ -613,6 +583,5 @@ function randInt(a, b) {
   return Math.floor(Math.random() * (b - a + 1)) + a;
 }
 
-// Делаем tick глобальным для firebase.js
 window.tick = tick;
 window.S = S;
